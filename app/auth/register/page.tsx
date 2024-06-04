@@ -5,10 +5,12 @@ import Link from "next/link"
 import { ReactNode } from "react"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from "next/navigation"
 
 export default function RegisterPage() {
 
   const { register, handleSubmit, formState: { errors } } = useForm()
+  const router = useRouter()
 
   const onSubmit = handleSubmit(async (data) => {
 
@@ -19,14 +21,24 @@ export default function RegisterPage() {
 
     const res = await fetch("/auth/api/register", {
       method: 'POST',
-      body: JSON.stringify({ data }),
+      body: JSON.stringify({ 
+          nombre: data.nombre,
+          apellido: data.apellido,
+          telefono: data.telefono,
+          username: data.username,
+          email: data.email,
+          password: data.password
+
+       }),
       headers: {
         'Content-Type': 'application/json'
       }
     })
 
-    const resJSON = await res.json()
-    console.log(resJSON);
+    if (res.ok) {
+      router.push('/order/cafe')
+    }
+    
   })
 
   return (
